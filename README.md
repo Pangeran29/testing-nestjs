@@ -1,5 +1,5 @@
 ## Description
-Holla, this repo i made for solve some problem that i faced in my project
+Holla, this repo i made for solve some problem and testing a technology that i used in my project
 
 I also make this repo to improve my writing skill :)
 
