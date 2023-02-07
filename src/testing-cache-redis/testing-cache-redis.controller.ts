@@ -30,9 +30,7 @@ export class TestingCacheRedisController {
   @CacheKey('test')
   @CacheTTL(60)
   @Get('global-cache/:id')
-  async testingCacheGlobal(
-    @Param('id') id: string
-  ): Promise<any> {
+  async testingCacheGlobal(@Param('id') id: string): Promise<any> {
     /** Cache data by id */
     const { data } = await this.httpService.axiosRef.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
     console.log(await this.cacheService.get('test'));
