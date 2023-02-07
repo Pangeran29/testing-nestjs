@@ -27,8 +27,6 @@ export class TestingCacheRedisController {
   }
 
   /** define cache name and expiration time */
-  @CacheKey('test')
-  @CacheTTL(60)
   @Get('global-cache/:id')
   async testingCacheGlobal(@Param('id') id: string): Promise<any> {
     /** Cache data by id */
