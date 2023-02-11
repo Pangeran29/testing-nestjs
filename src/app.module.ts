@@ -5,6 +5,7 @@ import { TestingCookieModule } from './testing-cookie/testing-cookie.module';
 import { TestingCacheRedisModule } from './testing-cache-redis/testing-cache-redis.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { TestingTypeormModule } from './testing-typeorm/testing-typeorm.module';
 import * as redisStore from 'cache-manager-redis-store'
 
 @Module({
@@ -22,7 +23,7 @@ import * as redisStore from 'cache-manager-redis-store'
       }
     }),
     TestingCookieModule, 
-    TestingCacheRedisModule
+    TestingCacheRedisModule, TestingTypeormModule
   ],
   controllers: [AppController],
   providers: [
