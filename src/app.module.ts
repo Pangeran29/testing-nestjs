@@ -8,24 +8,20 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TestingTypeormModule } from './testing-typeorm/testing-typeorm.module';
 import { WinstonLoggerModule } from './winston-logger/winston-logger.module';
 import * as redisStore from 'cache-manager-redis-store'
-
-import { WinstonModule } from 'nest-winston';
-import * as winston from 'winston';
+// import * as redisStore from 'cache-manager-ioredis'
 import { LoggerService } from './testing-winston/logger.middleware';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     
-    CacheModule.register({
-      /** Register Cache one */
-      isGlobal: true,
-
-      /** Using redis to store cached data */
-      store: redisStore,
-      socket: {
-        host: 'localhost',
-        port: 6379
+    CacheModule.registerAsync({
+      useFactory: () => {
+        return {
+          store: redisStore,
+          host: 'localhost',
+          port: '6379',
+        }
       }
     }),
 

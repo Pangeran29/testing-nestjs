@@ -1,30 +1,66 @@
-FROM debian:bullseye as builder
+###################
+# BUILD FOR LOCAL DEVELOPMENT
+###################
 
-ARG NODE_VERSION=18.13.0
-ARG YARN_VERSION=8.19.3
+FROM node:18-alpine As development
 
-RUN apt-get update; apt install -y curl python-is-python3 pkg-config build-essential
-RUN curl https://get.volta.sh | bash
-ENV VOLTA_HOME /root/.volta
-ENV PATH /root/.volta/bin:$PATH
-RUN volta install node@${NODE_VERSION} npm@${YARN_VERSION}
+# Create app directory
+WORKDIR /usr/src/app
 
-#######################################################################
+# Copy application dependency manifests to the container image.
+# A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
+# Copying this first prevents re-running npm install on every code change.
+COPY --chown=node:node package*.json ./
 
-RUN mkdir /app
-WORKDIR /app
+# Install app dependencies using the `npm ci` command instead of `npm install`
+RUN npm ci
 
-COPY . .
+# Bundle app source
+COPY --chown=node:node . .
 
-RUN npm install
-FROM debian:bullseye
+# Use the node user from the image (instead of the root user)
+USER node
 
-COPY --from=builder /root/.volta /root/.volta
-COPY --from=builder /app /app
+###################
+# BUILD FOR PRODUCTION
+###################
 
-WORKDIR /app
-ENV PATH /root/.volta/bin:$PATH
+FROM node:18-alpine As build
 
-CMD [ "npm", "run", "start" ]
+WORKDIR /usr/src/app
 
-EXPOSE 3003
+COPY --chown=node:node package*.json ./
+
+# In order to run `npm run build` we need access to the Nest CLI.
+# The Nest CLI is a dev dependency,
+# In the previous development stage we ran `npm ci` which installed all dependencies.
+# So we can copy over the node_modules directory from the development image into this build image.
+COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+
+COPY --chown=node:node . .
+
+# Run the build command which creates the production bundle
+RUN npm run build
+
+# Set NODE_ENV environment variable
+ENV NODE_ENV production
+
+# Running `npm ci` removes the existing node_modules directory.
+# Passing in --only=production ensures that only the production dependencies are installed.
+# This ensures that the node_modules directory is as optimized as possible.
+RUN npm ci --only=production && npm cache clean --force
+
+USER node
+
+###################
+# PRODUCTION
+###################
+
+FROM node:18-alpine As production
+
+# Copy the bundled code from the build stage to the production image
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+
+# Start the server using the production build
+CMD [ "node", "dist/main.js" ]

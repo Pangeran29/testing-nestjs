@@ -9,14 +9,14 @@ import { User } from './enitites/user.entity';
 @Controller('testing-typeorm')
 export class TestingTypeormController {
   constructor(
-    @InjectRepository(User)
-    private readonly user: Repository<User>,
-    @InjectRepository(Profile)
-    private readonly profile: Repository<Profile>,
-    @InjectRepository(Role)
-    private readonly role: Repository<Role>,
-    @InjectRepository(Photo)
-    private readonly photo: Repository<Photo>
+    // @InjectRepository(User)
+    // private readonly user: Repository<User>,
+    // @InjectRepository(Profile)
+    // private readonly profile: Repository<Profile>,
+    // @InjectRepository(Role)
+    // private readonly role: Repository<Role>,
+    // @InjectRepository(Photo)
+    // private readonly photo: Repository<Photo>
   ) {}
 
 
@@ -46,7 +46,7 @@ export class TestingTypeormController {
     const user = new User()
     user.name = "John"
     user.photos = [photo1, photo2]
-    await this.user.save(user)
+    // await this.user.save(user)
     return 'test'
   } 
 }

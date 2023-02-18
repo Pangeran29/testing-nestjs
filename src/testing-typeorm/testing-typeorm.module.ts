@@ -8,17 +8,17 @@ import { TestingTypeormController } from './testing-typeorm.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'root',
-      password: '12345678',
-      database: 'paragon',
-      entities: ['dist/**/*entity.js'],
-      synchronize: true
-    }),
-    TypeOrmModule.forFeature([Profile, User, Role, Photo])
+    // TypeOrmModule.forRoot({
+    //   type: 'postgres',
+    //   host: 'localhost',
+    //   port: 5432,
+    //   username: 'root',
+    //   password: '12345678',
+    //   database: 'paragon',
+    //   entities: ['dist/**/*entity.js'],
+    //   synchronize: true
+    // }),
+    // TypeOrmModule.forFeature([Profile, User, Role, Photo])
   ],
   controllers: [TestingTypeormController]
 })
