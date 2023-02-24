@@ -6,7 +6,6 @@ import { TestingCacheRedisModule } from './testing-cache-redis/testing-cache-red
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TestingTypeormModule } from './testing-typeorm/testing-typeorm.module';
-import { WinstonLoggerModule } from './winston-logger/winston-logger.module';
 import { LoggerService } from './testing-winston/logger.middleware';
 
 @Module({
@@ -16,7 +15,8 @@ import { LoggerService } from './testing-winston/logger.middleware';
     CacheModule.register({  isGlobal: true }),
 
     TestingCookieModule, 
-    TestingCacheRedisModule, TestingTypeormModule, WinstonLoggerModule
+    TestingCacheRedisModule, 
+    TestingTypeormModule
   ],
   controllers: [AppController],
   providers: [
