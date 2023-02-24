@@ -18,12 +18,15 @@ export class TestingCookieController {
   ): GetCookie {
     try {
       const requestCookie = req.signedCookies;
+      
       const cookieOptions: CookieOptions = {
-        maxAge: 3000,
+        maxAge: 60000,
         httpOnly: true,
         signed: true,
       } 
-      res.cookie('cookie', 'testing cookie', cookieOptions);      
+
+      res.cookie('cookie', 'testing cookie', cookieOptions);
+      
       return { requestCookie };
     } catch (error) {
       throw new InternalServerErrorException('Fail to get coocdckie');
